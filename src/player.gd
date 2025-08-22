@@ -3,7 +3,7 @@ extends CharacterBody3D
 
 enum Action{
 	WALK,
-	SPRINT,
+	RUN,
 	CROUCH,
 	SLIDE,
 }
@@ -11,8 +11,9 @@ var action: Action = Action.WALK
 
 @export_category("Movement")
 @export var max_speed: float = 6.0
-@export var acceleration: float = 30.0
-@export var friction: float = 20.0
+@export var run_speed: float = 12.0
+@export var acceleration: float = 40.0
+@export var friction: float = 30.0
 @export var slide_friction: float = 10.0
 
 @export var jump_velocity: float = 3.5
@@ -53,7 +54,11 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	var move_dir := set_move_direction()
 	
-	walk(move_dir, delta)
+	match action:
+		Action.WALK:
+			walk(move_dir, delta)
+		Action.RUN:
+			run(move_dir, delta)
 	
 	gravity(delta)
 	jump()
@@ -74,7 +79,7 @@ func set_move_direction() -> Vector3:
 	direction = direction.rotated(Vector3.UP, head.rotation.y) ## Rotate with camera
 	return direction
 
-func walk(direction: Vector3, d_t: float) -> void:	
+func walk(direction: Vector3, d_t: float) -> void:
 	var horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
 	
 	## Check acceleration direction
@@ -88,6 +93,27 @@ func walk(direction: Vector3, d_t: float) -> void:
 	
 	velocity.x = horizontal_velocity.x
 	velocity.z = horizontal_velocity.z
+	
+	if Input.is_action_just_pressed("move_run"):
+		action = Action.RUN
+
+func run(direction: Vector3, d_t: float) -> void:
+	var horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
+	
+	## Check acceleration direction
+	var temp_accel: float
+	if direction.dot(horizontal_velocity) > 0: 
+		temp_accel = acceleration ## Same direction
+	else: 
+		temp_accel = friction     ## Different direction
+		
+	horizontal_velocity = horizontal_velocity.move_toward(direction * run_speed, temp_accel * d_t)
+	
+	velocity.x = horizontal_velocity.x
+	velocity.z = horizontal_velocity.z
+	
+	if Input.is_action_just_released("move_run"):
+		action = Action.WALK
 
 func rotate_head(mouse_axis : Vector2) -> void:
 	## Horizontal mouse look
