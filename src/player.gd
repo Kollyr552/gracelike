@@ -13,19 +13,24 @@ var action: Action = Action.WALK
 @export var max_speed: float = 6.0
 @export var run_speed: float = 12.0
 @export var acceleration: float = 40.0
-@export var friction: float = 30.0
+@export var friction: float = 60.0
 @export var slide_friction: float = 10.0
 
 @export var jump_velocity: float = 3.5
 
+@export_category("Camera")
 @export var mouse_sensitivity: float = 2.0
+@export var crouch_camera_height: float = 0.0
+@export var default_camera_height: float = 1.5
+@export var camera_crouch_speed: float = 5.0
 
 
 @onready var head: Marker3D = %HeadPos
 @onready var spring_arm_3d: SpringArm3D = $SpringArm3D
 
 @onready var tall_collision: CollisionShape3D = $TallCollision
-
+@onready var crouch_collision: CollisionShape3D = $CrouchCollision
+@onready var ceiling_check: RayCast3D = $CeilingCheck
 
 func _input(event: InputEvent) -> void:
 	## Switch nouse capture
@@ -51,6 +56,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
 
+func _ready() -> void:
+	action = Action.WALK
+	
+	tall_collision.disabled = false
+	crouch_collision.disabled = true
+	spring_arm_3d.spring_length = default_camera_height
+
 func _physics_process(delta: float) -> void:
 	var move_dir := set_move_direction()
 	
@@ -64,6 +76,9 @@ func _physics_process(delta: float) -> void:
 	jump()
 	
 	move_and_slide()
+
+func _process(delta: float) -> void:
+	toggle_crouch_collision(Input.is_action_pressed("move_crouch"), delta)
 
 func jump() -> void:
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
@@ -123,3 +138,17 @@ func rotate_head(mouse_axis : Vector2) -> void:
 	## Vertical mouse look
 	head.rotation.x -= mouse_axis.y * (mouse_sensitivity/1000)
 	head.rotation.x = clamp(head.rotation.x, -PI*0.5, PI*0.35)
+
+func toggle_crouch_collision(toggle: bool, d_t: float) -> void:
+	if toggle: ## toggle on
+		tall_collision.disabled = true
+		crouch_collision.disabled = false
+	elif not ceiling_check.is_colliding(): ## toggle off AND no ceiling
+		tall_collision.disabled = false
+		crouch_collision.disabled = true
+	
+	## Camera movement
+	if toggle:
+		spring_arm_3d.spring_length = move_toward(spring_arm_3d.spring_length, crouch_camera_height, camera_crouch_speed*d_t)
+	else:
+		spring_arm_3d.spring_length = move_toward(spring_arm_3d.spring_length, default_camera_height, camera_crouch_speed*d_t)
