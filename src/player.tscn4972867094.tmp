@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://e3s7ugqu28e5"]
+
+[ext_resource type="Script" uid="uid://bvvgxlchgu7v" path="res://src/player.gd" id="1_lowyb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rc2ur"]
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+script = ExtResource("1_lowyb")
+max_speed = null
+jump_velocity = null
+mouse_sensitivity = null
+
+[node name="TallCollision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_rc2ur")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.2, 0)
+spring_length = 1.5
+
+[node name="HeadPos" type="Marker3D" parent="SpringArm3D"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+top_level = true
+
+[node name="Camera3D" type="Camera3D" parent="SpringArm3D/HeadPos"]
