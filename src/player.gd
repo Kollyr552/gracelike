@@ -1,8 +1,20 @@
+@icon("res://assets/steamhappy.png")
 extends CharacterBody3D
 
+enum Action{
+	WALK,
+	SPRINT,
+	CROUCH,
+	SLIDE,
+}
+var action: Action = Action.WALK
 
-@export var max_speed: float = 300.0
-@export var friction: float = 50.0
+@export_category("Movement")
+@export var max_speed: float = 6.0
+@export var acceleration: float = 30.0
+@export var friction: float = 20.0
+@export var slide_friction: float = 10.0
+
 @export var jump_velocity: float = 3.5
 
 @export var mouse_sensitivity: float = 2.0
@@ -12,6 +24,7 @@ extends CharacterBody3D
 @onready var spring_arm_3d: SpringArm3D = $SpringArm3D
 
 @onready var tall_collision: CollisionShape3D = $TallCollision
+
 
 func _input(event: InputEvent) -> void:
 	## Switch nouse capture
@@ -38,15 +51,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_tree().quit()
 
 func _physics_process(delta: float) -> void:
+	var move_dir := set_move_direction()
 	
-	move(delta)
+	walk(move_dir, delta)
 	
 	gravity(delta)
 	jump()
 	
 	move_and_slide()
-	
-	#head.position = spring_arm_3d.position
 
 func jump() -> void:
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
@@ -56,17 +68,26 @@ func gravity(d_t :float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * d_t
 
-func move(d_t: float) -> void:
+func set_move_direction() -> Vector3:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	direction = direction.rotated(Vector3.UP, head.rotation.y)
+	var direction: Vector3 = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	direction = direction.rotated(Vector3.UP, head.rotation.y) ## Rotate with camera
+	return direction
+
+func walk(direction: Vector3, d_t: float) -> void:	
+	var horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
 	
-	if direction:
-		velocity.x = direction.x * max_speed * d_t
-		velocity.z = direction.z * max_speed * d_t
-	else:
-		velocity.x = move_toward(velocity.x, 0, friction * d_t)
-		velocity.z = move_toward(velocity.z, 0, friction * d_t)
+	## Check acceleration direction
+	var temp_accel: float
+	if direction.dot(horizontal_velocity) > 0: 
+		temp_accel = acceleration ## Same direction
+	else: 
+		temp_accel = friction     ## Different direction
+		
+	horizontal_velocity = horizontal_velocity.move_toward(direction * max_speed, temp_accel * d_t)
+	
+	velocity.x = horizontal_velocity.x
+	velocity.z = horizontal_velocity.z
 
 func rotate_head(mouse_axis : Vector2) -> void:
 	## Horizontal mouse look
