@@ -26,7 +26,7 @@ var is_input_crouch: bool = false
 @export var crouch_camera_height: float = 0.0
 @export var default_camera_height: float = 1.5
 @export var camera_crouch_speed: float = 5.0
-
+var desired_camera_height: float
 
 @onready var head: Marker3D = %HeadPos
 @onready var spring_arm_3d: SpringArm3D = $SpringArm3D
@@ -61,11 +61,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_tree().quit()
 
 func _ready() -> void:
-	action = Action.WALK
-	
 	tall_collision.disabled = false
 	crouch_collision.disabled = true
 	spring_arm_3d.spring_length = default_camera_height
+	desired_camera_height = default_camera_height
 
 func _physics_process(delta: float) -> void:
 	var move_dir := set_move_direction()
@@ -81,14 +80,13 @@ func _physics_process(delta: float) -> void:
 		Action.SLIDE:
 			fsm_slide(move_dir, delta)
 	
-	print_debug("state: ", action)
+	#print_debug("state: ", action)
 	
 	gravity(delta)
 	jump()
 	
-	var btime: float = Engine.get_physics_frames() / (Engine.physics_ticks_per_second as float)
-	var bob_check: bool = Vector3(velocity.x, 0.0, velocity.z).length_squared() >= 10.0
-	view_bob.bob_view(btime, bob_check, delta)
+	bob(delta)
+	ease_camera_height(delta)
 	
 	move_and_slide()
 
@@ -187,12 +185,18 @@ func toggle_crouch_collision(toggle: bool, d_t: float) -> void:
 	if toggle: ## toggle on
 		tall_collision.disabled = true
 		crouch_collision.disabled = false
+		desired_camera_height = crouch_camera_height
 	elif not ceiling_check.is_colliding(): ## toggle off AND no ceiling
 		tall_collision.disabled = false
 		crouch_collision.disabled = true
-	
+	if not toggle:
+		desired_camera_height = default_camera_height
+
+func ease_camera_height(d_t: float):
 	## Camera movement
-	if toggle:
-		spring_arm_3d.spring_length = move_toward(spring_arm_3d.spring_length, crouch_camera_height, camera_crouch_speed*d_t)
-	else:
-		spring_arm_3d.spring_length = move_toward(spring_arm_3d.spring_length, default_camera_height, camera_crouch_speed*d_t)
+		spring_arm_3d.spring_length = move_toward(spring_arm_3d.spring_length, desired_camera_height, camera_crouch_speed*d_t)
+
+func bob(d_t:float):
+	var btime: float = Engine.get_physics_frames() / (Engine.physics_ticks_per_second as float)
+	var bob_check: bool = Vector3(velocity.x, 0.0, velocity.z).length_squared() >= 2.5
+	view_bob.bob_view(btime, bob_check, d_t)
