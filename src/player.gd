@@ -9,6 +9,8 @@ enum Action{
 }
 var action: Action = Action.WALK
 
+var is_input_crouch: bool = false
+
 @export_category("Movement")
 @export var max_speed: float = 6.0
 @export var run_speed: float = 12.0
@@ -27,6 +29,8 @@ var action: Action = Action.WALK
 
 @onready var head: Marker3D = %HeadPos
 @onready var spring_arm_3d: SpringArm3D = $SpringArm3D
+@onready var view_bob: CameraBob = $SpringArm3D/HeadPos/ViewBob
+#var bob_time: float = 0.0
 
 @onready var tall_collision: CollisionShape3D = $TallCollision
 @onready var crouch_collision: CollisionShape3D = $CrouchCollision
@@ -75,10 +79,17 @@ func _physics_process(delta: float) -> void:
 	gravity(delta)
 	jump()
 	
+	var btime: float = Engine.get_physics_frames() / (Engine.physics_ticks_per_second as float)
+	var bob_check: bool = Vector3(velocity.x, 0.0, velocity.z).length_squared() >= 10.0
+	view_bob.bob_view(btime, bob_check, delta)
+	
 	move_and_slide()
 
 func _process(delta: float) -> void:
-	toggle_crouch_collision(Input.is_action_pressed("move_crouch"), delta)
+	
+	is_input_crouch = Input.is_action_pressed("move_crouch")
+	
+	toggle_crouch_collision(is_input_crouch, delta)
 
 func jump() -> void:
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
