@@ -17,7 +17,8 @@ var is_input_crouch: bool = false
 @export var crouch_speed_mult: float = 0.5
 @export var acceleration: float = 40.0
 @export var friction: float = 60.0
-@export var slide_friction: float = 10.0
+@export_range(0.0, 1.0) var slide_friction: float = 0.25
+@export_range(0.0, 1.0) var slide_turn_speed: float = 0.7
 
 @export var jump_velocity: float = 3.5
 
@@ -170,7 +171,25 @@ func fsm_crouch(direction: Vector3, d_t: float) -> void:
 			
 
 func fsm_slide(direction: Vector3, d_t: float) -> void:
-	pass
+	## Check acceleration direction
+	var temp_accel: float
+	#if direction.dot(get_horizontal_velocity()) > 0: 
+		#temp_accel = acceleration ## Same direction
+	#else: 
+		#temp_accel = friction     ## Different direction
+	temp_accel = slide_friction
+	var temp_vel: Vector3= get_horizontal_velocity()
+	if direction.x != 0.0 and direction.z != 0.0:
+		temp_vel = temp_vel.slerp(direction*get_horizontal_velocity().length(), 1 - pow(1-slide_turn_speed, d_t))
+	temp_vel = temp_vel.lerp(Vector3.ZERO, 1 - pow(1-temp_accel,d_t))
+	velocity.x = temp_vel.x
+	velocity.z = temp_vel.z
+	
+	if Input.is_action_just_released("move_crouch"):
+		if Input.is_action_pressed("move_run"):
+			action = Action.RUN
+		else:
+			action = Action.WALK
 
 func rotate_head(mouse_axis : Vector2) -> void:
 	## Horizontal mouse look
@@ -197,6 +216,7 @@ func ease_camera_height(d_t: float):
 		spring_arm_3d.spring_length = move_toward(spring_arm_3d.spring_length, desired_camera_height, camera_crouch_speed*d_t)
 
 func bob(d_t:float):
+	if action == Action.SLIDE: return
 	var btime: float = Engine.get_physics_frames() / (Engine.physics_ticks_per_second as float)
 	var bob_check: bool = Vector3(velocity.x, 0.0, velocity.z).length_squared() >= 2.5
 	view_bob.bob_view(btime, bob_check, d_t)
