@@ -54,8 +54,8 @@ top_level = true
 [node name="ViewBob" type="Node3D" parent="SpringArm3D/HeadPos"]
 script = ExtResource("3_ehvfd")
 bob_speed = 20.0
-bob_height = 0.02
-bob_ease = 0.4
+bob_height = 0.08
+bob_ease = 0.5
 
 [node name="Camera3D" type="Camera3D" parent="SpringArm3D/HeadPos/ViewBob"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
