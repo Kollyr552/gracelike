@@ -90,6 +90,8 @@ func _physics_process(delta: float) -> void:
 	ease_camera_height(delta)
 	
 	move_and_slide()
+	
+	$CanvasLayer.set_speed_labels(velocity)
 
 func _process(delta: float) -> void:
 	
@@ -177,6 +179,7 @@ func fsm_slide(direction: Vector3, d_t: float) -> void:
 	## Get slope (slide) angle - sliding across a slope is like sliding on a flat surface
 	var surface_normal := get_floor_normal()
 	var slope_boost = cos( h_vel.angle_to(surface_normal) )
+	print("angle: ",rad_to_deg(h_vel.angle_to(surface_normal)), " | cos: ", cos( h_vel.angle_to(surface_normal) ))
 	
 	## Rotation
 	if direction.x != 0.0 and direction.z != 0.0:
@@ -184,9 +187,6 @@ func fsm_slide(direction: Vector3, d_t: float) -> void:
 		
 	## Friction
 	h_vel = h_vel.lerp(Vector3.ZERO, 1 - pow(1-slide_friction,d_t))
-	
-	
-	print("angle: ",rad_to_deg(h_vel.angle_to(surface_normal)), " | cos: ", cos( h_vel.angle_to(surface_normal) ))
 	
 	velocity.x = h_vel.x
 	velocity.z = h_vel.z
