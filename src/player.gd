@@ -171,19 +171,25 @@ func fsm_crouch(direction: Vector3, d_t: float) -> void:
 			
 
 func fsm_slide(direction: Vector3, d_t: float) -> void:
-	## Check acceleration direction
-	var temp_accel: float
-	#if direction.dot(get_horizontal_velocity()) > 0: 
-		#temp_accel = acceleration ## Same direction
-	#else: 
-		#temp_accel = friction     ## Different direction
-	temp_accel = slide_friction
-	var temp_vel: Vector3= get_horizontal_velocity()
+	
+	var h_vel: Vector3= get_horizontal_velocity()
+	
+	## Get slope (slide) angle - sliding across a slope is like sliding on a flat surface
+	var surface_normal := get_floor_normal()
+	var slope_boost = cos( h_vel.angle_to(surface_normal) )
+	
+	## Rotation
 	if direction.x != 0.0 and direction.z != 0.0:
-		temp_vel = temp_vel.slerp(direction*get_horizontal_velocity().length(), 1 - pow(1-slide_turn_speed, d_t))
-	temp_vel = temp_vel.lerp(Vector3.ZERO, 1 - pow(1-temp_accel,d_t))
-	velocity.x = temp_vel.x
-	velocity.z = temp_vel.z
+		h_vel = h_vel.slerp(direction*h_vel.length(), 1 - pow(1-slide_turn_speed, d_t))
+		
+	## Friction
+	h_vel = h_vel.lerp(Vector3.ZERO, 1 - pow(1-slide_friction,d_t))
+	
+	
+	print("angle: ",rad_to_deg(h_vel.angle_to(surface_normal)), " | cos: ", cos( h_vel.angle_to(surface_normal) ))
+	
+	velocity.x = h_vel.x
+	velocity.z = h_vel.z
 	
 	if Input.is_action_just_released("move_crouch"):
 		if Input.is_action_pressed("move_run"):
