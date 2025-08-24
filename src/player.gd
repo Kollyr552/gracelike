@@ -21,6 +21,7 @@ var is_input_crouch: bool = false
 @export_range(0.0, 1.0) var slide_turn_speed: float = 0.7
 
 @export var jump_velocity: float = 3.5
+@export var gravity_mult: float = 1.2
 
 @export_category("Camera")
 @export var mouse_sensitivity: float = 2.0
@@ -105,7 +106,7 @@ func jump() -> void:
 
 func gravity(d_t :float) -> void:
 	if not is_on_floor():
-		velocity += get_gravity() * d_t
+		velocity += get_gravity() * gravity_mult * d_t
 
 func set_move_direction() -> Vector3:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
@@ -186,7 +187,8 @@ func fsm_slide(direction: Vector3, d_t: float) -> void:
 		h_vel = h_vel.slerp(direction*h_vel.length(), 1 - pow(1-slide_turn_speed, d_t))
 		
 	## Friction
-	h_vel = h_vel.lerp(Vector3.ZERO, 1 - pow(1-slide_friction,d_t))
+	surface_normal.y = 0.0
+	h_vel = h_vel.lerp(surface_normal*max_speed*10, 1 - pow(1-slide_friction,d_t))
 	
 	velocity.x = h_vel.x
 	velocity.z = h_vel.z
