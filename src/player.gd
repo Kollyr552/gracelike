@@ -21,7 +21,7 @@ var is_input_crouch: bool = false
 @export_range(0.0, 1.0) var slide_turn_speed: float = 0.7
 
 @export var jump_velocity: float = 3.5
-@export var gravity_mult: float = 1.2
+@export var gravity_mult: float = 1.0
 
 @export_category("Camera")
 @export var mouse_sensitivity: float = 2.0
@@ -192,6 +192,7 @@ func fsm_slide(direction: Vector3, d_t: float) -> void:
 	
 	velocity.x = h_vel.x
 	velocity.z = h_vel.z
+	
 	
 	if Input.is_action_just_released("move_crouch"):
 		if Input.is_action_pressed("move_run"):
