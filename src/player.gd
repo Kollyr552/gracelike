@@ -92,7 +92,9 @@ func _physics_process(delta: float) -> void:
 	
 	move_and_slide()
 	
-	$CanvasLayer.set_speed_labels(velocity)
+	Global.debug_panel.update_property("Horizontal Velocity", "%.3f" % get_horizontal_velocity().length(), 1)
+	Global.debug_panel.update_property("Vertical Velocity", "%.3f" % velocity.y, 2)
+	Global.debug_panel.update_property("Action", Action.keys()[action], 3)
 
 func _process(delta: float) -> void:
 	

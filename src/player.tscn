@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://e3s7ugqu28e5"]
 
 [ext_resource type="Script" uid="uid://bvvgxlchgu7v" path="res://src/player.gd" id="1_lowyb"]
-[ext_resource type="Script" uid="uid://cypo1l302q6g1" path="res://src/player_hud.gd" id="2_bktlc"]
 [ext_resource type="Texture2D" uid="uid://cmjyxg2obay3e" path="res://assets/steamhappy.png" id="2_gmfve"]
+[ext_resource type="Script" uid="uid://b7o7uht4qjj0q" path="res://src/debug_panel.gd" id="3_bktlc"]
 [ext_resource type="Script" uid="uid://h1tg8yv48qbw" path="res://src/view_bob.gd" id="3_ehvfd"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rc2ur"]
@@ -22,7 +22,6 @@ default_camera_height = 1.6
 camera_crouch_speed = 12.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-script = ExtResource("2_bktlc")
 
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer"]
 anchors_preset = 15
@@ -37,21 +36,31 @@ layout_mode = 2
 texture = ExtResource("2_gmfve")
 expand_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
 offset_right = 40.0
 offset_bottom = 40.0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
 
-[node name="DevBuild" type="Label" parent="CanvasLayer/VBoxContainer"]
+[node name="DebugPanel" type="PanelContainer" parent="CanvasLayer/MarginContainer" node_paths=PackedStringArray("property_container")]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+script = ExtResource("3_bktlc")
+property_container = NodePath("MarginContainer/VBoxContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/DebugPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/DebugPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="DevBuild" type="Label" parent="CanvasLayer/MarginContainer/DebugPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Dev build"
-
-[node name="HSpeedLabel" type="Label" parent="CanvasLayer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="VSpeedLabel" type="Label" parent="CanvasLayer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
 
 [node name="TallCollision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
