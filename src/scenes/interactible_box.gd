@@ -18,7 +18,7 @@ func _on_area_entered(interact_box: Area3D) -> void:
 			action_triggered.emit()
 
 func _on_area_exited(interact_box: Area3D) -> void:
-	if interact_box is InteractBox:
+	if requires_input and interact_box is InteractBox:
 		interact_box.on_input_press.disconnect(trigger_with_required_input)
 
 func trigger_with_required_input(ibox: InteractBox) -> void:
