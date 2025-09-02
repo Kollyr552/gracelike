@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://40wdp2l1o0a8"]
+
+[ext_resource type="Script" uid="uid://cj8eeal334hns" path="res://src/scenes/interactible_box.gd" id="1_t4dj0"]
+
+[node name="InteractibleBox" type="Area3D"]
+monitorable = false
+script = ExtResource("1_t4dj0")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

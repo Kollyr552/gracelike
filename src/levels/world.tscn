@@ -1,8 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://dn2yh2p0udqvv"]
+[gd_scene load_steps=21 format=3 uid="uid://dn2yh2p0udqvv"]
 
 [ext_resource type="Script" uid="uid://brice0sd2khbi" path="res://src/levels/world.gd" id="1_q35l7"]
 [ext_resource type="Material" uid="uid://bjs456v22ds7s" path="res://assets/mat/placeholder_material.tres" id="2_j8oow"]
 [ext_resource type="PackedScene" uid="uid://e3s7ugqu28e5" path="res://src/scenes/player.tscn" id="3_wr3og"]
+[ext_resource type="PackedScene" uid="uid://40wdp2l1o0a8" path="res://src/scenes/interactible_box.tscn" id="4_j8oow"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xlegt"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -54,6 +55,9 @@ size = Vector3(240, 120, 15)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_dotkg"]
 points = PackedVector3Array(-120, 60, 7.5, 120, -60, 7.5, -120, 60, -7.5, -120, -60, 7.5, 120, -60, -7.5, -120, -60, -7.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wr3og"]
+size = Vector3(2, 2, 2)
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_q35l7")
@@ -129,3 +133,13 @@ shape = SubResource("ConvexPolygonShape3D_dotkg")
 
 [node name="Player" parent="." instance=ExtResource("3_wr3og")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="InteractibleBox" parent="." instance=ExtResource("4_j8oow")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 2, -3)
+requires_input = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractibleBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.5, -0.5)
+shape = SubResource("BoxShape3D_wr3og")
+
+[connection signal="action_triggered" from="InteractibleBox" to="." method="_on_interactible_box_action_triggered"]

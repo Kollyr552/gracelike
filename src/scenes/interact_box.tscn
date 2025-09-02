@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpnmicvhuyemn"]
+
+[ext_resource type="Script" uid="uid://cxik2kovpm7ym" path="res://src/scenes/interact_box.gd" id="1_ls7t1"]
+
+[node name="InteractBox" type="Area3D"]
+monitoring = false
+script = ExtResource("1_ls7t1")
