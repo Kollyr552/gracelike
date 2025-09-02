@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://cj8eeal334hns" path="res://src/scenes/interactible_box.gd" id="1_t4dj0"]
 
 [node name="InteractibleBox" type="Area3D"]
+collision_layer = 0
+collision_mask = 4
 monitorable = false
 script = ExtResource("1_t4dj0")
 
