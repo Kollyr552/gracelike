@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://e3s7ugqu28e5"]
 
-[ext_resource type="Script" uid="uid://bvvgxlchgu7v" path="res://src/player.gd" id="1_lowyb"]
+[ext_resource type="Script" uid="uid://bvvgxlchgu7v" path="res://src/scenes/player.gd" id="1_lowyb"]
 [ext_resource type="Texture2D" uid="uid://cmjyxg2obay3e" path="res://assets/steamhappy.png" id="2_gmfve"]
-[ext_resource type="Script" uid="uid://b7o7uht4qjj0q" path="res://src/debug_panel.gd" id="3_bktlc"]
-[ext_resource type="Script" uid="uid://h1tg8yv48qbw" path="res://src/view_bob.gd" id="3_ehvfd"]
+[ext_resource type="Script" uid="uid://b7o7uht4qjj0q" path="res://src/scripts/debug_panel.gd" id="3_bktlc"]
+[ext_resource type="Script" uid="uid://h1tg8yv48qbw" path="res://src/scripts/view_bob.gd" id="3_ehvfd"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rc2ur"]
 
