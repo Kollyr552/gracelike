@@ -17,8 +17,9 @@ sky = SubResource("Sky_qjc6n")
 tonemap_mode = 2
 glow_enabled = true
 
-[node name="RoomGeneration" type="Node3D"]
+[node name="RoomGeneration" type="Node3D" node_paths=PackedStringArray("starting_room")]
 script = ExtResource("1_5ie7h")
+starting_room = NodePath("Rooms/RoomSTART")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_sr0g6")
