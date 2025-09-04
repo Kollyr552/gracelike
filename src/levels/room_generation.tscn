@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cf4vna6rpci1j"]
+[gd_scene load_steps=7 format=3 uid="uid://cf4vna6rpci1j"]
 
 [ext_resource type="Script" uid="uid://bqsmdxu1n6hy3" path="res://src/levels/room_generation.gd" id="1_5ie7h"]
 [ext_resource type="PackedScene" uid="uid://e3s7ugqu28e5" path="res://src/scenes/player.tscn" id="2_aquyn"]
+[ext_resource type="PackedScene" uid="uid://bgjfr26xmgiql" path="res://src/scenes/rooms/room_start.tscn" id="3_725k5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_725k5"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -30,3 +31,5 @@ shadow_enabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="Rooms" type="Node3D" parent="."]
+
+[node name="RoomSTART" parent="Rooms" instance=ExtResource("3_725k5")]

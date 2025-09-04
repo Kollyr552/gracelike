@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://bgjfr26xmgiql"]
+
+[ext_resource type="PackedScene" uid="uid://ba7dkfothvbfd" path="res://src/scenes/rooms/room_prefab.tscn" id="1_fxxm1"]
+[ext_resource type="Material" uid="uid://bjs456v22ds7s" path="res://assets/mat/placeholder_material.tres" id="2_4nb8m"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fxxm1"]
+size = Vector2(12, 6)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_fxxm1"]
+points = PackedVector3Array(-6, 0, -3, -6, 0, 3, 6, 0, -3, 6, 0, 3)
+
+[node name="RoomSTART" instance=ExtResource("1_fxxm1")]
+spawn_weight = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+material_override = ExtResource("2_4nb8m")
+mesh = SubResource("PlaneMesh_fxxm1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/RoomCollision" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_fxxm1")
+
+[node name="MarkerEndpoint" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
