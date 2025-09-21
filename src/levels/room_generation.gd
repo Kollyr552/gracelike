@@ -26,6 +26,6 @@ func spawn_next_room() -> void:
 func get_next_room_scene() -> PackedScene:
 	## Get random room
 	var max_rooms = Data.room_types.size()
-	var room_id = Global.rng.randi_range(0, max_rooms)
+	var room_id = Global.rng.randi_range(0, max_rooms-1)
 	
 	return Data.room_types[room_id]

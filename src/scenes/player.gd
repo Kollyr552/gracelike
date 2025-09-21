@@ -95,6 +95,8 @@ func _physics_process(delta: float) -> void:
 	Global.debug_panel.update_property("Horizontal Velocity", "%.3f" % get_horizontal_velocity().length(), 1)
 	Global.debug_panel.update_property("Vertical Velocity", "%.3f" % velocity.y, 2)
 	Global.debug_panel.update_property("Action", Action.keys()[action], 3)
+	Global.debug_panel.update_property("Slope angle", "%.3f" % rad_to_deg(get_horizontal_velocity().angle_to(get_floor_normal())), 4)
+	Global.debug_panel.update_property("Slope cosine", "%.3f" % cos( get_horizontal_velocity().angle_to(get_floor_normal())), 5)
 
 func _process(delta: float) -> void:
 	
@@ -182,7 +184,6 @@ func fsm_slide(direction: Vector3, d_t: float) -> void:
 	## Get slope (slide) angle - sliding across a slope is like sliding on a flat surface
 	var surface_normal := get_floor_normal()
 	var slope_boost = cos( h_vel.angle_to(surface_normal) )
-	print("angle: ",rad_to_deg(h_vel.angle_to(surface_normal)), " | cos: ", cos( h_vel.angle_to(surface_normal) ))
 	
 	## Rotation
 	if direction.x != 0.0 and direction.z != 0.0:
