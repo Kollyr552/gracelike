@@ -1,0 +1,43 @@
+[gd_scene load_steps=8 format=3 uid="uid://hfto0nkjs20v"]
+
+[ext_resource type="Script" uid="uid://cxal7mnbflw80" path="res://src/scenes/music_radio.gd" id="1_a3wpd"]
+[ext_resource type="Texture2D" uid="uid://cbmyeehfhd7sw" path="res://assets/models/radio.png" id="1_ufm1p"]
+[ext_resource type="ArrayMesh" uid="uid://1onxx70tuy6u" path="res://assets/models/radio.obj" id="2_irlv3"]
+[ext_resource type="PackedScene" uid="uid://40wdp2l1o0a8" path="res://src/scenes/interactible_box.tscn" id="3_irlv3"]
+[ext_resource type="AudioStream" uid="uid://csp78uol65ls0" path="res://assets/audio/huta_plastiku-haj__mono.mp3" id="5_7btut"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a3wpd"]
+albedo_texture = ExtResource("1_ufm1p")
+texture_filter = 0
+texture_repeat = false
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a3wpd"]
+size = Vector3(0.8, 0.5, 0.5)
+
+[node name="MusicRadio" type="Node3D"]
+script = ExtResource("1_a3wpd")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_a3wpd")
+mesh = ExtResource("2_irlv3")
+
+[node name="InteractibleBox" parent="." instance=ExtResource("3_irlv3")]
+requires_input = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractibleBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9802322e-08, 0.25, 0.050000012)
+shape = SubResource("BoxShape3D_a3wpd")
+debug_color = Color(0.491704, 0.5809639, 0.17731377, 0.41960785)
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+stream = ExtResource("5_7btut")
+attenuation_model = 1
+max_db = -5.0
+max_distance = 100.0
+attenuation_filter_cutoff_hz = 20500.0
+attenuation_filter_db = 0.0
+doppler_tracking = 2
+
+[connection signal="action_triggered" from="InteractibleBox" to="." method="_on_interactible_box_action_triggered"]
+[connection signal="finished" from="AudioStreamPlayer3D" to="." method="_on_audio_stream_player_3d_finished"]

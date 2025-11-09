@@ -1,12 +1,11 @@
-[gd_scene load_steps=25 format=3 uid="uid://dn2yh2p0udqvv"]
+[gd_scene load_steps=23 format=3 uid="uid://dn2yh2p0udqvv"]
 
 [ext_resource type="Script" uid="uid://brice0sd2khbi" path="res://src/levels/world.gd" id="1_q35l7"]
 [ext_resource type="Material" uid="uid://bjs456v22ds7s" path="res://assets/mat/placeholder_material.tres" id="2_j8oow"]
 [ext_resource type="PackedScene" uid="uid://e3s7ugqu28e5" path="res://src/scenes/player.tscn" id="3_wr3og"]
 [ext_resource type="PackedScene" uid="uid://40wdp2l1o0a8" path="res://src/scenes/interactible_box.tscn" id="4_j8oow"]
 [ext_resource type="PackedScene" uid="uid://cwv5ekedur01h" path="res://src/scenes/door.tscn" id="5_wr3og"]
-[ext_resource type="Texture2D" uid="uid://cbmyeehfhd7sw" path="res://assets/models/radio.png" id="6_8k84k"]
-[ext_resource type="ArrayMesh" uid="uid://1onxx70tuy6u" path="res://assets/models/radio.obj" id="6_hkv0b"]
+[ext_resource type="PackedScene" uid="uid://hfto0nkjs20v" path="res://src/scenes/music_radio.tscn" id="6_hkv0b"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xlegt"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -61,11 +60,6 @@ points = PackedVector3Array(-120, 60, 7.5, 120, -60, 7.5, -120, 60, -7.5, -120, 
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wr3og"]
 size = Vector3(2, 2, 2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8k84k"]
-albedo_texture = ExtResource("6_8k84k")
-texture_filter = 0
-texture_repeat = false
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_q35l7")
@@ -152,9 +146,7 @@ shape = SubResource("BoxShape3D_wr3og")
 [node name="Door" parent="." instance=ExtResource("5_wr3og")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, -4)
 
-[node name="Radio" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 14, 0, -4)
-material_override = SubResource("StandardMaterial3D_8k84k")
-mesh = ExtResource("6_hkv0b")
+[node name="MusicRadio" parent="." instance=ExtResource("6_hkv0b")]
+transform = Transform3D(0.3420201, 0, 0.9396926, 0, 1, 0, -0.9396926, 0, 0.3420201, 16, 0, 3)
 
 [connection signal="action_triggered" from="InteractibleBox" to="." method="_on_interactible_box_action_triggered"]
