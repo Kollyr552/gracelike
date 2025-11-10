@@ -19,6 +19,7 @@ var is_input_crouch: bool = false
 @export var friction: float = 60.0
 @export_range(0.0, 1.0) var slide_friction: float = 0.25
 @export_range(0.0, 1.0) var slide_turn_speed: float = 0.7
+@export var slide_speed_multiplier: float = 8.0
 
 @export var jump_velocity: float = 3.5
 @export var gravity_mult: float = 1.0
@@ -175,7 +176,6 @@ func fsm_crouch(direction: Vector3, d_t: float) -> void:
 			action = Action.RUN
 		else:
 			action = Action.WALK
-			
 
 func fsm_slide(direction: Vector3, d_t: float) -> void:
 	
@@ -183,7 +183,7 @@ func fsm_slide(direction: Vector3, d_t: float) -> void:
 	
 	## Get slope (slide) angle - sliding across a slope is like sliding on a flat surface
 	var surface_normal := get_floor_normal()
-	var slope_boost = cos( h_vel.angle_to(surface_normal) )
+	#var slope_boost = cos( h_vel.angle_to(surface_normal) )
 	
 	## Rotation
 	if direction.x != 0.0 and direction.z != 0.0:
@@ -191,7 +191,7 @@ func fsm_slide(direction: Vector3, d_t: float) -> void:
 		
 	## Friction
 	surface_normal.y = 0.0
-	h_vel = h_vel.lerp(surface_normal*max_speed*10, 1 - pow(1-slide_friction,d_t))
+	h_vel = h_vel.lerp(surface_normal*max_speed*slide_speed_multiplier, 1 - pow(1-slide_friction,d_t))
 	
 	velocity.x = h_vel.x
 	velocity.z = h_vel.z

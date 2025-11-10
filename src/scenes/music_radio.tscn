@@ -1,13 +1,16 @@
 [gd_scene load_steps=8 format=3 uid="uid://hfto0nkjs20v"]
 
 [ext_resource type="Script" uid="uid://cxal7mnbflw80" path="res://src/scenes/music_radio.gd" id="1_a3wpd"]
-[ext_resource type="Texture2D" uid="uid://cbmyeehfhd7sw" path="res://assets/models/radio.png" id="1_ufm1p"]
-[ext_resource type="ArrayMesh" uid="uid://1onxx70tuy6u" path="res://assets/models/radio.obj" id="2_irlv3"]
+[ext_resource type="Texture2D" uid="uid://cjj3kgeeqb4fm" path="res://assets/models/radio_r.png" id="2_7btut"]
+[ext_resource type="ArrayMesh" uid="uid://o15351yslgln" path="res://assets/models/radio_r.obj" id="3_1klao"]
 [ext_resource type="PackedScene" uid="uid://40wdp2l1o0a8" path="res://src/scenes/interactible_box.tscn" id="3_irlv3"]
 [ext_resource type="AudioStream" uid="uid://csp78uol65ls0" path="res://assets/audio/huta_plastiku-haj__mono.mp3" id="5_7btut"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a3wpd"]
-albedo_texture = ExtResource("1_ufm1p")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sx6vr"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("2_7btut")
 texture_filter = 0
 texture_repeat = false
 
@@ -17,9 +20,9 @@ size = Vector3(0.8, 0.5, 0.5)
 [node name="MusicRadio" type="Node3D"]
 script = ExtResource("1_a3wpd")
 
-[node name="Model" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_a3wpd")
-mesh = ExtResource("2_irlv3")
+[node name="Radio" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_sx6vr")
+mesh = ExtResource("3_1klao")
 
 [node name="InteractibleBox" parent="." instance=ExtResource("3_irlv3")]
 requires_input = true
