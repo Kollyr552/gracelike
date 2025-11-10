@@ -134,7 +134,7 @@ func fsm_walk(direction: Vector3, d_t: float) -> void:
 	velocity.x = temp_vel.x
 	velocity.z = temp_vel.z
 	
-	if Input.is_action_just_pressed("move_run"):
+	if get_horizontal_velocity() != Vector3.ZERO and Input.is_action_pressed("move_run"):
 		action = Action.RUN
 	
 	if Input.is_action_just_pressed("move_crouch"):
@@ -153,7 +153,7 @@ func fsm_run(direction: Vector3, d_t: float) -> void:
 	velocity.x = temp_vel.x
 	velocity.z = temp_vel.z
 	
-	if Input.is_action_just_released("move_run"):
+	if Input.is_action_just_released("move_run") or get_horizontal_velocity() == Vector3.ZERO:
 		action = Action.WALK
 	
 	if Input.is_action_just_pressed("move_crouch"):
